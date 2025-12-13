@@ -11,7 +11,7 @@ st.set_page_config(
 
 # 2. 定義您的 GitHub Pages 網址
 # ⚠️ 請將下方的網址換成您第一階段取得的真實網址
-github_url = "https://您的帳號.github.io/您的專案名稱/index.html"
+github_url = "https://jackson1319-netizen.github.io/927HTML/big.html"
 
 # 3. 使用 iframe 嵌入
 # height 建議設定 800-1000，確保手機版滑動順暢
