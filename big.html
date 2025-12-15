@@ -22,6 +22,7 @@
             --text-main: #1d1d1f;
             --text-secondary: #86868b;
             --accent-blue: #0071e3;
+            --accent-gold: #f5a623; /* 新增金黃色 */
             --success-green: #34c759;
             --error-red: #ff3b30;
             --border-radius: 16px;
@@ -61,7 +62,7 @@
             margin-bottom: 20px;
             border-radius: var(--border-radius);
             overflow: hidden;
-            display: none; /* 預設隱藏，有圖片時才顯示 */
+            display: none; 
         }
         .banner-img {
             width: 100%;
@@ -128,6 +129,7 @@
         .result-value { font-weight: 600; color: var(--text-main); font-feature-settings: "tnum"; }
         .highlight-blue { color: var(--accent-blue); }
 
+        /* 總資產藍色卡片 */
         .highlight-total-card {
             margin-top: 25px; padding: 25px;
             background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
@@ -136,6 +138,16 @@
         }
         .highlight-total-card .result-label { display: block; margin-bottom: 5px; color: var(--accent-blue); font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
         .highlight-total-card .result-value { font-size: 2rem; color: var(--text-main); letter-spacing: -1px;}
+
+        /* 新增：報酬率金黃色卡片 */
+        .highlight-roi-card {
+            margin-top: 15px; padding: 20px;
+            background: linear-gradient(135deg, #fffbf0 0%, #fff 100%);
+            border: 1px solid rgba(245, 166, 35, 0.2); border-radius: 16px;
+            text-align: center; box-shadow: 0 4px 15px rgba(245, 166, 35, 0.1);
+        }
+        .highlight-roi-card .result-label { display: block; margin-bottom: 5px; color: #d48806; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+        .highlight-roi-card .result-value { font-size: 2.2rem; color: #d48806; font-weight: 700; letter-spacing: -1px;}
 
         .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
         .status-success { background-color: rgba(52, 199, 89, 0.1); color: var(--success-green); }
@@ -194,7 +206,7 @@
     // 🔒 設定您的密碼
     const MY_ACCESS_PASSWORD = "TP927"; 
 
-    // 🖼️ 設定 Banner 圖片網址 (若無圖片，請留空或刪除網址)
+    // 🖼️ 設定 Banner 圖片網址
     const BANNER_IMAGE_URL = "https://i.postimg.cc/T2nftvNz/Gemini-Generated-Image-i77458i77458i774.png"; 
     // ==========================================
 
@@ -287,7 +299,7 @@
             rateInput = 8;
         }
 
-        const PAYOUT_RATE = rateInput / 100; // 轉換為小數點 (例如 8 -> 0.08)
+        const PAYOUT_RATE = rateInput / 100;
         const TERM_YEARS = 6;
         const principalAmount = parseFloat(document.getElementById('principal').value);
 
@@ -304,6 +316,13 @@
         const annualPayout = investmentBase * PAYOUT_RATE;
         const totalSavingsPaid = annualSavingsPremium * TERM_YEARS;
         const totalAssetAfterSixYears = totalSavingsPaid + investmentPreFee;
+        
+        // 計算平均年化報酬率 (CAGR)
+        // 公式：(期末/期初)^(1/年數) - 1
+        let cagr = 0;
+        if (principalAmount > 0) {
+            cagr = (Math.pow(totalAssetAfterSixYears / principalAmount, 1 / TERM_YEARS) - 1) * 100;
+        }
         
         const tolerance = isUSD ? 0.1 : 1; 
         const isBalanced = Math.abs(annualPayout - annualSavingsPremium) < tolerance;
@@ -356,6 +375,11 @@
             <div class="highlight-total-card">
                 <span class="result-label">六年後總資產預估</span>
                 <span class="result-value">${symbol}${formatCurrency(totalAssetAfterSixYears)}</span>
+            </div>
+
+            <div class="highlight-roi-card">
+                <span class="result-label">平均年化報酬率</span>
+                <span class="result-value">${cagr.toFixed(2)}%</span>
             </div>
         `;
         
