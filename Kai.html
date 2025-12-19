@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微檢查｜每日生活校準</title>
+    <style>
+        :root {
+            --bg: #f8f5f0; 
+            --card: rgba(255, 255, 255, 0.88);
+            --text-main: #3d3d3b; 
+            --text-sub: #7a7772;
+            --accent: #96a58d; 
+            --line: rgba(232, 228, 222, 0.7);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: "PingFang TC", "Noto Sans TC", sans-serif;
+            background: var(--bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(243, 231, 211, 0.6) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(150, 165, 141, 0.2) 0px, transparent 50%);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #app { width: 92%; max-width: 480px; padding: 20px; z-index: 10; }
+
+        .header-section { text-align: center; margin-bottom: 40px; animation: fadeIn 1.2s ease; }
+        .main-title { font-size: 1.8rem; font-weight: 600; letter-spacing: 4px; margin-bottom: 20px; }
+        .intro-text { font-size: 0.95rem; color: var(--text-sub); line-height: 2; }
+        .intro-text p { margin: 8px 0; }
+        .highlight { color: var(--accent); font-weight: 600; }
+
+        .progress-bar { display: flex; justify-content: center; gap: 10px; margin-bottom: 35px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--line); transition: 0.4s; }
+        .dot.active { background: var(--accent); width: 24px; border-radius: 10px; }
+
+        .step { display: none; animation: slideUp 0.6s ease-out forwards; }
+        .active { display: block; }
+
+        h2 { font-weight: 500; font-size: 1.25rem; margin-bottom: 28px; text-align: center; letter-spacing: 1px; }
+        .options { display: flex; flex-direction: column; gap: 12px; }
+
+        button.opt {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 18px 22px;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            text-align: left;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        button.opt:hover { border-color: var(--accent); transform: translateY(-2px); background: white; }
+
+        .feedback-card {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            padding: 40px 28px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .res-content { margin-bottom: 28px; }
+        .res-label { font-size: 0.7rem; color: var(--accent); font-weight: bold; margin-bottom: 8px; display: block; letter-spacing: 2px; }
+        .res-text { font-size: 1.05rem; line-height: 1.7; }
+
+        .footer { text-align: center; margin-top: 40px; }
+        .ig-link {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            padding: 14px 28px;
+            border-radius: 50px;
+            background: var(--card);
+            border: 1px solid var(--accent);
+            transition: 0.3s;
+        }
+        .ig-link:hover { background: var(--accent); color: white; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="header-section" id="header">
+        <div class="main-title">微檢查</div>
+        <div class="intro-text">
+            <p>生活不需要每天都正確</p>
+            <p>但需要每天都 <span class="highlight">對齊</span></p>
+            <p style="font-size: 0.85rem; margin-top: 15px; opacity: 0.8;">這 30 秒，是你與內在的對話。<br>請直覺地選擇最貼近現狀的選項。</p>
+        </div>
+    </div>
+
+    <div class="progress-bar" id="progress">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+
+    <div id="step1" class="step active">
+        <h2>此時此刻，內在的氣候是？</h2>
+        <div class="options">
+            <button class="opt" onclick="goNext(2, 'feeling', 'light')">☀️ 晴朗，感到平靜且充滿動力</button>
+            <button class="opt" onclick="goNext(2, 'feeling', 'heavy')">☁️ 多雲，身心感到些許沉重負荷</button>
+            <button class="opt" onclick="goNext(2, 'feeling', 'foggy')">🌫️ 大霧，對於方向感到模糊不清</button>
+            <button class="opt" onclick="goNext(2, 'feeling', 'storm')">⛈️ 暴雨，正處於情緒波動的震盪中</button>
+        </div>
+    </div>
+
+    <div id="step2" class="step">
+        <h2>關於資源，你現在的感覺？</h2>
+        <div class="options">
+            <button class="opt" onclick="goNext(3, 'money', 'safe')">🌱 穩定，生活節奏在掌控之中</button>
+            <button class="opt" onclick="goNext(3, 'money', 'leak')">💧 滲漏，感到精力或金錢正在流失</button>
+            <button class="opt" onclick="goNext(3, 'money', 'tight')">⏳ 緊繃，對未來的資源感到焦慮</button>
+            <button class="opt" onclick="goNext(3, 'money', 'chaos')">🌀 混亂，不清楚目前的流向與剩餘</button>
+        </div>
+    </div>
+
+    <div id="step3" class="step">
+        <h2>環境與外界給你的感受？</h2>
+        <div class="options">
+            <button class="opt" onclick="goNext(4, 'env', 'noise')">📢 雜音，訊息與社交干擾過多</button>
+            <button class="opt" onclick="goNext(4, 'env', 'still')">⚓ 凝滯，感覺陷在原地停滯不前</button>
+            <button class="opt" onclick="goNext(4, 'env', 'mess')">🗑️ 凌亂，身處的空間或計劃失去秩序</button>
+            <button class="opt" onclick="goNext(4, 'env', 'empty')">🌑 孤寂，感到缺乏連結與回饋</button>
+        </div>
+    </div>
+
+    <div id="step4" class="step">
+        <h2>現在你最想守護的是？</h2>
+        <div class="options">
+            <button class="opt" onclick="showFinal('patience')">耐心：給發展留出足夠的時間</button>
+            <button class="opt" onclick="showFinal('boundary')">邊界：推開不屬於我的消耗</button>
+            <button class="opt" onclick="showFinal('action')">微動：用一個具體的小事打破現狀</button>
+            <button class="opt" onclick="showFinal('rest')">修復：讓身心徹底地關機重啟</button>
+        </div>
+    </div>
+
+    <div id="step5" class="step">
+        <div class="feedback-card">
+            <div class="res-content"><span class="res-label">狀態解讀</span><div id="res-1" class="res-text"></div></div>
+            <div class="res-content"><span class="res-label">穩定提醒</span><div id="res-2" class="res-text"></div></div>
+            <div class="res-content" style="border-top: 1px dashed var(--line); padding-top: 25px;">
+                <span class="res-label">今日微行動</span>
+                <div id="res-3" class="res-text" style="font-weight: 600; color: var(--accent);"></div>
+            </div>
+        </div>
+        <div class="footer">
+            <a href="https://www.instagram.com/freekai0327/" target="_blank" class="ig-link">深度思維練習｜@freekai0327</a>
+            <p style="font-size: 0.75rem; color: #bbb; margin-top: 25px; cursor: pointer;" onclick="location.reload()">重新對齊狀態</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let answers = {};
+    const getRand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    const pool = {
+        feeling: {
+            light: ["現在的輕盈不是運氣，是你懂得放下多餘期待的成果。","能在繁雜中感到平靜，說明你已經拿回了生活的主導權。","這種狀態很珍貴，不必急著優化它，靜靜享受就好。","穩定的能量會吸引穩定的資源，請維持目前的頻率。","你正處於高效的對齊狀態，這是適合做決策的時刻。"],
+            heavy: ["沉重感不是因為你做錯什麼，而是你承擔了過期的責任。","當你感到重，說明身體在提醒你：該進行一次心理斷捨離了。","有些行李是別人的，你不必幫他們背到終點。","重量感是成長的前奏，它在逼你識別什麼才是真正核心的。","感覺重時就先停下，強行負重只會縮短你的耐力。"],
+            foggy: ["看不清未來是正常的，因為未來本來就還沒發生。","大霧時不要奔跑，只要確保腳下站的地方是穩固的。","模糊感是在給你空間，讓你重新定義你想去的地方。","找不到方向時，往往是重新發現自我的最好契機。","暫時的迷失，是為了讓你不再沿用舊的導航系統。"],
+            storm: ["情緒的震盪是能量的宣洩，允許它流經你的身體。","暴雨過後泥土會更紮實，現在請先給自己一個安全的避風港。","不要在波浪最大時下重大決定，現在只需要安穩存活。","波動代表你還在乎，這是生命力的證明，只是需要出口。"]
+        },
+        money: {
+            safe: ["資源穩定時，記得培養對未來的想像力與餘裕。","掌握感是生活質量的基礎，這份秩序值得你繼續守護。","現在的穩定是為了讓你更有勇氣去嘗試不賺錢但有趣的事。","資源充足時，觀察看看哪些是長期價值的投資而非短期消費。"],
+            leak: ["滲漏通常是心靈缺口的補償，觀察看看是哪裡需要安慰。","每一筆不明不白的支出，都是在透支你對未來的選擇權。","比起記帳，你更需要的是在下單前那三秒鐘的深呼吸。","試著與資源建立更誠實的關係，它會回報你更多的安全感。"],
+            tight: ["現在的緊繃是暫時的，別讓數字定義了你的靈魂價值。","在資源有限時，正是練習「精準生活」的最佳時機。","焦慮不會讓資源變多，但專注於創造價值與節流會。","縮小外部開支，反而能讓你清晰地看見內心最真實的需求。"],
+            chaos: ["混亂是因為你忽略了細小的流向，是時候重新梳理規則。","模糊的財務與精力，會導致模糊的生活決策。","拿出一張紙，把目前的流向視覺化，焦慮就會減半。","秩序不是為了束縛，而是為了讓你在使用資源時更自由。"]
+        },
+        action: {
+            patience: ["今天不強求進度。把一件小事做完整，就是最好的練習。","給焦慮的事情一個 24 小時緩衝期，它可能不戰而降。","看一朵雲或一棵樹三分鐘，練習與「無效率」共處。","寫下三件你目前無法改變但願意暫時接受的事。"],
+            boundary: ["取消一個今晚不想去的約會，或是關掉一個讓人煩躁的群組。","練習對不合理的要求說「我再思考一下」，練習拒絕。","清理手機螢幕，把不常用的 App 隱藏，減少視覺干擾。","明確告訴身邊的人，你需要一段不被打擾的獨處時光。"],
+            action: ["清理桌面或洗一個杯子。用物理秩序換取內心秩序。","把糾結的事拆解成一個現在就能做的 2 分鐘行動。","步行去一個沒去過的小巷子，打破大腦的慣性路徑。","刪除手機裡一張不需要的照片，完成一次微型斷捨離。"],
+            rest: ["現在閉上眼睛，感受身體哪一個部位最緊繃，放鬆它。","今天提早 30 分鐘熄燈，什麼都不要想，只管呼吸。","洗一個熱水澡，想像水流帶走了一整天的情緒灰塵。","換上一件最舒服的衣服，允許自己徹底地「無所事事」。"]
+        }
+    };
+
+    function goNext(num, key, val) {
+        answers[key] = val;
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + num).classList.add('active');
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, idx) => {
+            idx < num ? dot.classList.add('active') : dot.classList.remove('active');
+        });
+    }
+
+    function showFinal(wish) {
+        document.getElementById('header').style.display = 'none';
+        document.getElementById('progress').style.display = 'none';
+        document.getElementById('res-1').innerText = getRand(pool.feeling[answers.feeling]);
+        document.getElementById('res-2').innerText = getRand(pool.money[answers.money]);
+        document.getElementById('res-3').innerText = getRand(pool.action[wish]);
+        document.querySelectorAll('.
