@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>貴賓專屬｜資產與保單健檢儀表板</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0c2340;
+            --accent-color: #c5a059;
+            --green-in: #2e7d32;
+            --red-out: #c62828;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background-color: var(--bg-color); color: #333333; line-height: 1.5; padding: 10px; }
+        .dashboard-container { max-width: 600px; margin: 0 auto; background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; }
+        .header { background: linear-gradient(135deg, var(--primary-color) 0%, #1a365d 100%); color: white; padding: 30px 20px; text-align: center; border-bottom: 5px solid var(--accent-color); }
+        .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 5px; }
+        .header p { font-size: 16px; color: #cbd5e1; }
+        .summary-box { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 20px; background: #f1f5f9; }
+        .summary-card { background: white; border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-top: 4px solid var(--accent-color); }
+        .summary-card.green-border { border-top: 4px solid var(--green-in); }
+        .summary-card .title { font-size: 16px; color: #64748b; margin-bottom: 5px; font-weight: bold; }
+        .summary-card .number { font-size: 28px; font-weight: 700; }
+        .text-green { color: var(--green-in); }
+        .text-blue { color: var(--primary-color); }
+        .section-title { font-size: 20px; font-weight: 700; padding: 20px 20px 10px 20px; color: var(--primary-color); display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f1f5f9; margin-bottom: 15px; }
+        .policy-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; margin: 0 20px 20px 20px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .policy-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #e2e8f0; }
+        .policy-name { font-size: 18px; font-weight: 700; color: #1e293b; }
+        .status-badge { font-size: 14px; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
+        .status-paying { background-color: #fffbeb; color: #b45309; }
+        .info-list { list-style: none; }
+        .info-item { font-size: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .info-label { color: #64748b; }
+        .info-value { font-weight: 700; color: #334155; }
+        .info-value.red { color: var(--red-out); }
+        .info-value.green { color: var(--green-in); }
+        .progress-container { margin-top: 12px; }
+        .progress-label { font-size: 14px; color: #64748b; display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .progress-bar { background: #e2e8f0; height: 12px; border-radius: 6px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-color), #af863b); border-radius: 6px; }
+        .chart-box { padding: 10px 20px; display: flex; flex-direction: column; align-items: center; }
+        .chart-container { position: relative; width: 100%; max-width: 280px; height: 280px; margin: 0 auto 15px auto; }
+        .footer-note { background: #f8fafc; padding: 20px; border-top: 1px solid #e2e8f0; font-size: 15px; color: #475569; }
+        .footer-note h3 { font-size: 16px; color: var(--primary-color); margin-bottom: 8px; }
+        .footer-note ul { padding-left: 20px; }
+        .footer-note li { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="header">
+        <h1>📊 您的資產與保單總覽</h1>
+        <p>清楚掌握每一筆資金去向與收益</p>
+    </div>
+
+    <div class="summary-box">
+        <div class="summary-card">
+            <div class="title">🛡️ 未來預計傳承總額 (儲蓄險)</div>
+            <div class="number text-blue">約 $635,000 美金</div>
+        </div>
+        <div class="summary-card green-border">
+            <div class="title">💰 每月預估配息收入 (投資型)</div>
+            <div class="number text-green">約 NT$ 20,907 元</div>
+        </div>
+    </div>
+
+    <div class="section-title">
+        <i class="fa-solid fa-shield-halved" style="color: var(--accent-color);"></i>
+        <span>資產傳承防守區 (外幣分紅壽險 3 張)</span>
+    </div>
+
+    <div class="policy-card">
+        <div class="policy-header">
+            <span class="policy-name">1. 美富紅運 (3PFA)</span>
+            <span class="status-badge status-paying">🔴 繼續繳費中</span>
+        </div>
+        <ul class="info-list">
+            <li class="info-item"><span class="info-label">扣款時間</span><span class="info-value">每年 7 月 29 日</span></li>
+            <li class="info-item"><span class="info-label">應繳保費</span><span class="info-value red">$15,182 美金</span></li>
+            <li class="info-item"><span class="info-label">傳承效益 (預估)</span><span class="info-value green">$135,000 美金</span></li>
+        </ul>
+        <div class="progress-container">
+            <div class="progress-label"><span>繳費進度 (民國 113 年 ~ 116 年)</span><span>2 / 3 期</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 66.6%;"></div></div>
+        </div>
+    </div>
+
+    <div class="policy-card">
+        <div class="policy-header">
+            <span class="policy-name">2. 美富紅運 (6PFA)</span>
+            <span class="status-badge status-paying">🔴 繼續繳費中</span>
+        </div>
+        <ul class="info-list">
+            <li class="info-item"><span class="info-label">扣款時間</span><span class="info-value">每年 11 月 10 日</span></li>
+            <li class="info-item"><span class="info-label">應繳保費</span><span class="info-value red">$11,840 美金</span></li>
+            <li class="info-item"><span class="info-label">傳承效益 (預估)</span><span class="info-value green">$220,000 美金</span></li>
+        </ul>
+        <div class="progress-container">
+            <div class="progress-label"><span>繳費進度 (民國 112 年 ~ 118 年)</span><span>3 / 6 期</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 50%;"></div></div>
+        </div>
+    </div>
+
+    <div class="policy-card">
+        <div class="policy-header">
+            <span class="policy-name">3. 美富紅運 (6PFA)</span>
+            <span class="status-badge status-paying">🔴 繼續繳費中</span>
+        </div>
+        <ul class="info-list">
+            <li class="info-item"><span class="info-label">扣款時間</span><span class="info-value">每年 1 月 5 日</span></li>
+            <li class="info-item"><span class="info-label">應繳保費</span><span class="info-value red">$16,801 美金</span></li>
+            <li class="info-item"><span class="info-label">傳承效益 (預估)</span><span class="info-value green">$280,000 美金</span></li>
+        </ul>
+        <div class="progress-container">
+            <div class="progress-label"><span>繳費進度 (民國 115 年 ~ 121 年)</span><span>1 / 6 期</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 16.6%;"></div></div>
+        </div>
+    </div>
+
+    <div class="section-title">
+        <i class="fa-solid fa-chart-line" style="color: var(--green-in);"></i>
+        <span>現金流收益進攻區 (投資型保單 2 張)</span>
+    </div>
+
+    <div class="policy-card">
+        <div class="policy-header">
+            <span class="policy-name">📈 投資型保單總本金分配</span>
+            <span class="status-badge" style="background-color: #e0f2fe; color: #0369a1;">總投入 300 萬台幣</span>
+        </div>
+        
+        <div class="chart-box">
+            <div class="chart-container">
+                <canvas id="assetChart"></canvas>
+            </div>
+        </div>
+
+        <ul class="info-list" style="border-top: 1px dashed #e2e8f0; padding-top: 12px;">
+            <li class="info-item">
+                <span class="info-label">標的：DSP5 (年配息率 8%)</span>
+                <span class="info-value">本金 200 萬 <span class="text-green">(月配約 12,550)</span></span>
+            </li>
+            <li class="info-item">
+                <span class="info-label">標的：JFP11 (年配息率 11%)</span>
+                <span class="info-value">本金 100 萬 <span class="text-green">(月配約 8,357)</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="footer-note">
+        <h3>💡 顧問溫馨提醒</h3>
+        <ul>
+            <li><b>綠色標籤</b>：代表錢已經安穩鎖定，或是每個月穩定配息進帳。</li>
+            <li><b>紅色標籤</b>：代表每年固定時間要扣款付費的保單。</li>
+            <li>民國 116 年起，儲蓄險將陸續期滿，屆時您的付費壓力會大幅減輕。</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    const ctx = document.getElementById('assetChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['DSP5', 'JFP11'],
+            datasets: [{
+                data: [200, 100], 
+                backgroundColor: ['#0c2340', '#c5a059'],
+                borderWidth: 2,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { boxWidth: 12, font: { size: 14, weight: 'bold' }, padding: 15 }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
