@@ -1,196 +1,108 @@
 
-<!DOCTYPE html>
-<html lang="zh-TW">
+<!doctype html>
+<html lang="zh-Hant-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>貴賓專屬｜資產與保單健檢儀表板</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #0c2340;
-            --accent-color: #c5a059;
-            --green-in: #2e7d32;
-            --red-out: #c62828;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background-color: var(--bg-color); color: #333333; line-height: 1.5; padding: 10px; }
-        .dashboard-container { max-width: 600px; margin: 0 auto; background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; }
-        .header { background: linear-gradient(135deg, var(--primary-color) 0%, #1a365d 100%); color: white; padding: 30px 20px; text-align: center; border-bottom: 5px solid var(--accent-color); }
-        .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 5px; }
-        .header p { font-size: 16px; color: #cbd5e1; }
-        .summary-box { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 20px; background: #f1f5f9; }
-        .summary-card { background: white; border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-top: 4px solid var(--accent-color); }
-        .summary-card.green-border { border-top: 4px solid var(--green-in); }
-        .summary-card .title { font-size: 16px; color: #64748b; margin-bottom: 5px; font-weight: bold; }
-        .summary-card .number { font-size: 28px; font-weight: 700; }
-        .text-green { color: var(--green-in); }
-        .text-blue { color: var(--primary-color); }
-        .section-title { font-size: 20px; font-weight: 700; padding: 20px 20px 10px 20px; color: var(--primary-color); display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f1f5f9; margin-bottom: 15px; }
-        .policy-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; margin: 0 20px 20px 20px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-        .policy-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #e2e8f0; }
-        .policy-name { font-size: 18px; font-weight: 700; color: #1e293b; }
-        .status-badge { font-size: 14px; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
-        .status-paying { background-color: #fffbeb; color: #b45309; }
-        .info-list { list-style: none; }
-        .info-item { font-size: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .info-label { color: #64748b; }
-        .info-value { font-weight: 700; color: #334155; }
-        .info-value.red { color: var(--red-out); }
-        .info-value.green { color: var(--green-in); }
-        .progress-container { margin-top: 12px; }
-        .progress-label { font-size: 14px; color: #64748b; display: flex; justify-content: space-between; margin-bottom: 4px; }
-        .progress-bar { background: #e2e8f0; height: 12px; border-radius: 6px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-color), #af863b); border-radius: 6px; }
-        .chart-box { padding: 10px 20px; display: flex; flex-direction: column; align-items: center; }
-        .chart-container { position: relative; width: 100%; max-width: 280px; height: 280px; margin: 0 auto 15px auto; }
-        .footer-note { background: #f8fafc; padding: 20px; border-top: 1px solid #e2e8f0; font-size: 15px; color: #475569; }
-        .footer-note h3 { font-size: 16px; color: var(--primary-color); margin-bottom: 8px; }
-        .footer-note ul { padding-left: 20px; }
-        .footer-note li { margin-bottom: 5px; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09233e">
+  <title>保單與資產總覽</title>
+  <style>
+    :root { --ink:#13263c; --navy:#09233e; --gold:#c9a65d; --green:#16734b; --red:#b53c3c; --paper:#fff; --mist:#f4f6f8; --line:#e3e8ec; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--mist); color:var(--ink); font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif; line-height:1.55; }
+    button { font:inherit; }
+    .page { max-width:760px; margin:0 auto; background:var(--paper); min-height:100vh; box-shadow:0 0 32px rgba(20,41,61,.08); }
+    header { color:#fff; padding:42px 28px 32px; background:radial-gradient(circle at 85% 10%,#285274 0,transparent 31%),linear-gradient(135deg,#071d33,#123b5c); border-bottom:5px solid var(--gold); }
+    .eyebrow { display:flex; align-items:center; gap:8px; font-size:13px; letter-spacing:.08em; opacity:.75; }
+    .eyebrow::before { content:""; width:22px; height:1px; background:var(--gold); }
+    h1 { margin:10px 0 4px; font-size:clamp(27px,7vw,38px); letter-spacing:.025em; }
+    .subtitle { margin:0; color:#d8e3ea; font-size:16px; }
+    .updated { margin:18px 0 0; font-size:13px; color:#bed0db; }
+    main { padding-bottom:28px; }
+    .overview { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; padding:20px; background:#edf2f5; }
+    .stat { padding:17px 15px; border-radius:14px; background:#fff; box-shadow:0 4px 14px rgba(21,44,63,.055); border-top:4px solid var(--gold); }
+    .stat.income { border-top-color:var(--green); }.stat.protection { border-top-color:#8b5bb3; }
+    .stat-label { color:#607181; font-weight:700; font-size:13px; min-height:38px; }
+    .stat-value { margin-top:7px; color:var(--navy); font-size:clamp(20px,5vw,27px); font-weight:800; letter-spacing:-.025em; }
+    .income .stat-value { color:var(--green); }.protection .stat-value { color:#704295; }
+    .section { padding:28px 20px 0; }
+    .section-head { display:flex; gap:12px; align-items:flex-start; margin-bottom:14px; }
+    .icon { flex:none; display:grid; place-items:center; width:35px; height:35px; border-radius:11px; color:#8b6525; background:#fbf5e9; font-size:19px; }
+    .icon.green { color:var(--green); background:#e8f5ee; }.icon.purple { color:#704295; background:#f1eafa; }
+    h2 { margin:0; font-size:20px; line-height:1.3; }
+    .section-head p { margin:4px 0 0; color:#687887; font-size:14px; }
+    .policy { margin:12px 0; overflow:hidden; border:1px solid var(--line); border-radius:15px; background:#fff; box-shadow:0 3px 10px rgba(16,39,61,.035); }
+    .policy-trigger { border:0; width:100%; padding:16px; display:flex; align-items:center; gap:10px; text-align:left; color:inherit; background:#fff; cursor:pointer; }
+    .policy-trigger:hover { background:#fafcfd; }
+    .policy-title { flex:1; font-weight:800; font-size:17px; }
+    .policy-title small { display:block; margin-bottom:3px; color:#5f7181; font-size:12px; font-weight:700; }
+    .pill { flex:none; border-radius:100px; padding:4px 9px; background:#fff3ef; color:var(--red); font-size:12px; font-weight:800; white-space:nowrap; }
+    .insured-policy { border-left:5px solid #5c7ea0; }.insured-policy.royal { border-left-color:#8b5bb3; }
+    .insured-tag { display:inline-flex; align-items:center; flex:none; padding:5px 9px; border-radius:8px; background:#e8f1f8; color:#285170; font-size:13px; font-weight:800; white-space:nowrap; }.royal .insured-tag { background:#f0eafa; color:#704295; }
+    .chevron { transition:transform .2s ease; color:#778795; font-size:20px; }
+    .policy.is-open .chevron { transform:rotate(180deg); }
+    .policy-body { display:none; padding:0 16px 17px; }
+    .policy.is-open .policy-body { display:block; }
+    dl { margin:0; border-top:1px dashed var(--line); }
+    .row { display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid #f0f3f5; }
+    dt { color:#687887; font-size:14px; } dd { margin:0; font-weight:800; text-align:right; font-size:14px; } .red { color:var(--red); } .green-text { color:var(--green); }
+    .progress-label { display:flex; justify-content:space-between; gap:10px; margin:14px 0 5px; color:#657583; font-size:13px; }
+    .progress { height:8px; overflow:hidden; border-radius:10px; background:#e8edf0; }
+    .progress > span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#d6b56c,#ad8235); }
+    .cashflow { border:1px solid var(--line); border-radius:15px; padding:17px; background:linear-gradient(135deg,#fff,#fbfdfd); }
+    .cashflow-top { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; }
+    .cashflow h3 { margin:0; font-size:17px; }.cashflow-top p { margin:3px 0 0;color:#687887;font-size:13px; }.total { color:#0b5b91; background:#eaf6fc; padding:4px 9px; border-radius:100px; font-weight:800; font-size:12px; white-space:nowrap; }
+    .allocation-visual { display:flex; justify-content:center; align-items:center; gap:28px; padding:20px 4px 18px; }.donut { position:relative; display:grid; place-items:center; flex:none; width:178px; height:178px; border-radius:50%; background:conic-gradient(var(--navy) 0 66.667%,var(--gold) 66.667% 100%); }.donut::before{content:""; position:absolute; width:112px; height:112px; border-radius:50%; background:#fff; box-shadow:inset 0 0 0 1px #edf1f4;}.donut-center{position:relative;z-index:1;text-align:center;color:#667786;font-size:12px;font-weight:700;line-height:1.25}.donut-center strong{display:block;margin-top:3px;color:var(--navy);font-size:18px;letter-spacing:-.04em}.legend{display:grid;gap:11px}.legend-item{display:flex;align-items:center;gap:8px;color:#425564;font-size:13px;font-weight:700}.legend-item b{color:var(--ink)}.legend-dot{width:11px;height:11px;flex:none;border-radius:50%;background:var(--navy)}.legend-dot.gold{background:var(--gold)}
+    .bar { display:flex; height:16px; overflow:hidden; margin:17px 0 12px; border-radius:99px; background:#edf1f3; }.bar-a { width:66.667%; background:var(--navy); }.bar-b { width:33.333%; background:var(--gold); }
+    .fund { padding:12px 0; border-top:1px dashed var(--line); }.fund:first-of-type{border-top:0}.fund-header{display:flex; justify-content:space-between; gap:12px; align-items:baseline; font-weight:800;}.fund small{color:#697a87;font-weight:600;}.fund p{margin:4px 0 0;color:#587062;font-size:14px;}.fund + .fund{padding-bottom:0}
+    .note { margin:28px 20px 0; padding:18px; border-radius:14px; background:#f3f7f9; color:#405463; }.note h2{font-size:16px;margin:0 0 8px}.note ul{margin:0;padding-left:1.3em;font-size:14px}.note li+li{margin-top:5px}.contact { margin:20px; text-align:center; padding:22px; border:1px solid #e8d8af; border-radius:14px; background:#fffcf5; }.contact p{margin:3px 0;color:#667683;font-size:14px}.contact strong{color:var(--navy);font-size:17px}.print-button{display:inline-block;margin-top:12px;padding:9px 16px;border:0;border-radius:9px;background:var(--navy);color:white;font-weight:700;font-size:14px;cursor:pointer}.footer { padding:0 20px 12px;text-align:center;color:#8a98a3;font-size:12px; }
+    @media (max-width:620px) { .overview{grid-template-columns:1fr;padding:15px} } @media (max-width:460px) { header{padding:34px 20px 26px}.section{padding:24px 15px 0}.note,.contact{margin-left:15px;margin-right:15px}.policy-title{font-size:16px}.pill{font-size:11px;padding:3px 7px}.row{align-items:flex-start}.row dd{max-width:58%}.allocation-visual{gap:18px}.donut{width:150px;height:150px}.donut::before{width:94px;height:94px}.donut-center strong{font-size:15px}.legend-item{font-size:12px} }
+    @media print { body{background:#fff}.page{box-shadow:none}.policy-body{display:block!important}.chevron{display:none}.policy-trigger{cursor:default}.print-button{display:none} }
+  </style>
 </head>
 <body>
-
-<div class="dashboard-container">
-    <div class="header">
-        <h1>📊 您的資產與保單總覽</h1>
-        <p>清楚掌握每一筆資金去向與收益</p>
-    </div>
-
-    <div class="summary-box">
-        <div class="summary-card">
-            <div class="title">🛡️ 未來預計傳承總額 (儲蓄險)</div>
-            <div class="number text-blue">約 $635,000 美金</div>
-        </div>
-        <div class="summary-card green-border">
-            <div class="title">💰 每月預估配息收入 (投資型)</div>
-            <div class="number text-green">約 NT$ 20,907 元</div>
-        </div>
-    </div>
-
-    <div class="section-title">
-        <i class="fa-solid fa-shield-halved" style="color: var(--accent-color);"></i>
-        <span>資產傳承防守區 (外幣分紅壽險 3 張)</span>
-    </div>
-
-    <div class="policy-card">
-        <div class="policy-header">
-            <span class="policy-name">1. 美富紅運 (3PFA)</span>
-            <span class="status-badge status-paying">🔴 繼續繳費中</span>
-        </div>
-        <ul class="info-list">
-            <li class="info-item"><span class="info-label">扣款時間</span><span class="info-value">每年 7 月 29 日</span></li>
-            <li class="info-item"><span class="info-label">應繳保費</span><span class="info-value red">$15,182 美金</span></li>
-            <li class="info-item"><span class="info-label">傳承效益 (預估)</span><span class="info-value green">$135,000 美金</span></li>
-        </ul>
-        <div class="progress-container">
-            <div class="progress-label"><span>繳費進度 (民國 113 年 ~ 116 年)</span><span>2 / 3 期</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width: 66.6%;"></div></div>
-        </div>
-    </div>
-
-    <div class="policy-card">
-        <div class="policy-header">
-            <span class="policy-name">2. 美富紅運 (6PFA)</span>
-            <span class="status-badge status-paying">🔴 繼續繳費中</span>
-        </div>
-        <ul class="info-list">
-            <li class="info-item"><span class="info-label">扣款時間</span><span class="info-value">每年 11 月 10 日</span></li>
-            <li class="info-item"><span class="info-label">應繳保費</span><span class="info-value red">$11,840 美金</span></li>
-            <li class="info-item"><span class="info-label">傳承效益 (預估)</span><span class="info-value green">$220,000 美金</span></li>
-        </ul>
-        <div class="progress-container">
-            <div class="progress-label"><span>繳費進度 (民國 112 年 ~ 118 年)</span><span>3 / 6 期</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width: 50%;"></div></div>
-        </div>
-    </div>
-
-    <div class="policy-card">
-        <div class="policy-header">
-            <span class="policy-name">3. 美富紅運 (6PFA)</span>
-            <span class="status-badge status-paying">🔴 繼續繳費中</span>
-        </div>
-        <ul class="info-list">
-            <li class="info-item"><span class="info-label">扣款時間</span><span class="info-value">每年 1 月 5 日</span></li>
-            <li class="info-item"><span class="info-label">應繳保費</span><span class="info-value red">$16,801 美金</span></li>
-            <li class="info-item"><span class="info-label">傳承效益 (預估)</span><span class="info-value green">$280,000 美金</span></li>
-        </ul>
-        <div class="progress-container">
-            <div class="progress-label"><span>繳費進度 (民國 115 年 ~ 121 年)</span><span>1 / 6 期</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width: 16.6%;"></div></div>
-        </div>
-    </div>
-
-    <div class="section-title">
-        <i class="fa-solid fa-chart-line" style="color: var(--green-in);"></i>
-        <span>現金流收益進攻區 (投資型保單 2 張)</span>
-    </div>
-
-    <div class="policy-card">
-        <div class="policy-header">
-            <span class="policy-name">📈 投資型保單總本金分配</span>
-            <span class="status-badge" style="background-color: #e0f2fe; color: #0369a1;">總投入 300 萬台幣</span>
-        </div>
-        
-        <div class="chart-box">
-            <div class="chart-container">
-                <canvas id="assetChart"></canvas>
-            </div>
-        </div>
-
-        <ul class="info-list" style="border-top: 1px dashed #e2e8f0; padding-top: 12px;">
-            <li class="info-item">
-                <span class="info-label">標的：DSP5 (年配息率 8%)</span>
-                <span class="info-value">本金 200 萬 <span class="text-green">(月配約 12,550)</span></span>
-            </li>
-            <li class="info-item">
-                <span class="info-label">標的：JFP11 (年配息率 11%)</span>
-                <span class="info-value">本金 100 萬 <span class="text-green">(月配約 8,357)</span></span>
-            </li>
-        </ul>
-    </div>
-
-    <div class="footer-note">
-        <h3>💡 顧問溫馨提醒</h3>
-        <ul>
-            <li><b>綠色標籤</b>：代表錢已經安穩鎖定，或是每個月穩定配息進帳。</li>
-            <li><b>紅色標籤</b>：代表每年固定時間要扣款付費的保單。</li>
-            <li>民國 116 年起，儲蓄險將陸續期滿，屆時您的付費壓力會大幅減輕。</li>
-        </ul>
-    </div>
-
-</div>
-
-<script>
-    const ctx = document.getElementById('assetChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['DSP5', 'JFP11'],
-            datasets: [{
-                data: [200, 100], 
-                backgroundColor: ['#0c2340', '#c5a059'],
-                borderWidth: 2,
-                hoverOffset: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { boxWidth: 12, font: { size: 14, weight: 'bold' }, padding: 15 }
-                }
-            }
-        }
+  <div class="page">
+    <header>
+      <div class="eyebrow">PERSONAL FINANCIAL OVERVIEW</div>
+      <h1>您的保單與資產總覽</h1>
+      <p class="subtitle">清楚掌握保障、資金配置與未來現金流</p>
+      <p class="updated">資料整理日期：2026 年 7 月</p>
+    </header>
+    <main>
+      <section class="overview" aria-label="總覽">
+        <div class="stat"><div class="stat-label">資產傳承預估總額<br>（外幣分紅壽險）</div><div class="stat-value">約 US$635,000</div></div>
+        <div class="stat income"><div class="stat-label">每月預估配息收入<br>（投資型保單）</div><div class="stat-value">約 NT$20,907</div></div>
+        <div class="stat protection"><div class="stat-label">健康醫療保障<br>（癌症險）</div><div class="stat-value">2 張</div></div>
+      </section>
+      <section class="section" aria-labelledby="defense-title">
+        <div class="section-head"><div class="icon">🛡</div><div><h2 id="defense-title">資產傳承防守區</h2><p>外幣分紅壽險 3 張｜點擊卡片查看明細</p></div></div>
+        <article class="policy insured-policy is-open"><button class="policy-trigger" aria-expanded="true"><span class="policy-title"><small>外幣分紅壽險</small>陳榮美｜美富紅運（3PFA）</span><span class="insured-tag">被保險人：陳榮美</span><span class="chevron">⌄</span></button><div class="policy-body"><dl><div class="row"><dt>被保險人</dt><dd>陳榮美</dd></div><div class="row"><dt>扣款時間</dt><dd>每年 7 月 29 日</dd></div><div class="row"><dt>應繳保費</dt><dd class="red">US$15,182</dd></div><div class="row"><dt>傳承效益（預估）</dt><dd class="green-text">US$135,000</dd></div></dl><div class="progress-label"><span>繳費進度（民國 113 年～116 年）</span><b>2 / 3 期</b></div><div class="progress"><span style="width:66.67%"></span></div></div></article>
+        <article class="policy insured-policy"><button class="policy-trigger" aria-expanded="false"><span class="policy-title"><small>外幣分紅壽險</small>陳榮美｜美富紅運（6PFA）</span><span class="insured-tag">被保險人：陳榮美</span><span class="chevron">⌄</span></button><div class="policy-body"><dl><div class="row"><dt>被保險人</dt><dd>陳榮美</dd></div><div class="row"><dt>扣款時間</dt><dd>每年 11 月 10 日</dd></div><div class="row"><dt>應繳保費</dt><dd class="red">US$11,840</dd></div><div class="row"><dt>傳承效益（預估）</dt><dd class="green-text">US$220,000</dd></div></dl><div class="progress-label"><span>繳費進度（民國 112 年～118 年）</span><b>3 / 6 期</b></div><div class="progress"><span style="width:50%"></span></div></div></article>
+        <article class="policy insured-policy"><button class="policy-trigger" aria-expanded="false"><span class="policy-title"><small>外幣分紅壽險</small>陳榮美｜美富紅運（6PFA）</span><span class="insured-tag">被保險人：陳榮美</span><span class="chevron">⌄</span></button><div class="policy-body"><dl><div class="row"><dt>被保險人</dt><dd>陳榮美</dd></div><div class="row"><dt>扣款時間</dt><dd>每年 1 月 5 日</dd></div><div class="row"><dt>應繳保費</dt><dd class="red">US$16,801</dd></div><div class="row"><dt>傳承效益（預估）</dt><dd class="green-text">US$280,000</dd></div></dl><div class="progress-label"><span>繳費進度（民國 115 年～121 年）</span><b>1 / 6 期</b></div><div class="progress"><span style="width:16.67%"></span></div></div></article>
+      </section>
+      <section class="section" aria-labelledby="health-title">
+        <div class="section-head"><div class="icon purple">✚</div><div><h2 id="health-title">健康醫療保障區</h2><p>精準治療癌症險 2 張｜醫療費用防護</p></div></div>
+        <article class="policy insured-policy is-open"><button class="policy-trigger" aria-expanded="true"><span class="policy-title"><small>精準治療癌症險</small>陳榮美｜CLO 精準守護防癌定期健康保險</span><span class="insured-tag">被保險人：陳榮美</span><span class="chevron">⌄</span></button><div class="policy-body"><dl><div class="row"><dt>被保險人</dt><dd>陳榮美</dd></div><div class="row"><dt>保險類型</dt><dd>精準治療癌症險</dd></div><div class="row"><dt>扣款時間</dt><dd>每年 12 月 21 日</dd></div><div class="row"><dt>年繳保費</dt><dd class="red">NT$23,800</dd></div><div class="row"><dt>初次罹患癌症保障</dt><dd class="green-text">NT$100,000</dd></div><div class="row"><dt>基因檢測保障</dt><dd class="green-text">NT$150,000</dd></div><div class="row"><dt>標靶藥物治療保障</dt><dd class="green-text">NT$600,000</dd></div><div class="row"><dt>自體免疫治療保障</dt><dd class="green-text">NT$1,000,000</dd></div></dl><div class="progress-label"><span>繳費進度（民國 111 年～121 年）</span><b>第 4 年／共 10 年</b></div><div class="progress"><span style="width:40%"></span></div></div></article>
+        <article class="policy insured-policy royal"><button class="policy-trigger" aria-expanded="false"><span class="policy-title"><small>精準治療癌症險</small>黃文山｜CLO 精準守護防癌定期健康保險</span><span class="insured-tag">被保險人：黃文山</span><span class="chevron">⌄</span></button><div class="policy-body"><dl><div class="row"><dt>被保險人</dt><dd>黃文山</dd></div><div class="row"><dt>保險類型</dt><dd>精準治療癌症險</dd></div><div class="row"><dt>扣款時間</dt><dd>每年 12 月 21 日</dd></div><div class="row"><dt>年繳保費</dt><dd class="red">NT$38,400</dd></div><div class="row"><dt>初次罹患癌症保障</dt><dd class="green-text">NT$100,000</dd></div><div class="row"><dt>基因檢測保障</dt><dd class="green-text">NT$150,000</dd></div><div class="row"><dt>標靶藥物治療保障</dt><dd class="green-text">NT$600,000</dd></div><div class="row"><dt>自體免疫治療保障</dt><dd class="green-text">NT$1,000,000</dd></div></dl><div class="progress-label"><span>繳費進度（民國 111 年～121 年）</span><b>第 4 年／共 10 年</b></div><div class="progress"><span style="width:40%"></span></div></div></article>
+      </section>
+      <section class="section" aria-labelledby="income-title">
+        <div class="section-head"><div class="icon green">↗</div><div><h2 id="income-title">現金流收益進攻區</h2><p>投資型保單 2 張｜總投入 NT$3,000,000</p></div></div>
+        <div class="cashflow"><div class="cashflow-top"><div><h3>投資型保單本金分配</h3><p>以不同標的建立月配息現金流</p></div><span class="total">總投入 300 萬元</span></div><div class="allocation-visual" role="img" aria-label="本金分配圓餅圖：DSP5 為 200 萬元，佔 66.7%；JFP11 為 100 萬元，佔 33.3%。"><div class="donut"><div class="donut-center">總投入<strong>NT$3,000,000</strong></div></div><div class="legend"><div class="legend-item"><span class="legend-dot"></span><span>DSP5<br><b>66.7%｜200 萬</b></span></div><div class="legend-item"><span class="legend-dot gold"></span><span>JFP11<br><b>33.3%｜100 萬</b></span></div></div></div><div class="bar" aria-label="DSP5 佔 66.67%，JFP11 佔 33.33%"><span class="bar-a"></span><span class="bar-b"></span></div><div class="fund"><div class="fund-header"><span>DSP5 <small>｜本金 NT$2,000,000</small></span><span>66.7%</span></div><p>年配息率 8%｜月配息預估 <b class="green-text">約 NT$12,550</b></p></div><div class="fund"><div class="fund-header"><span>JFP11 <small>｜本金 NT$1,000,000</small></span><span>33.3%</span></div><p>年配息率 11%｜月配息預估 <b class="green-text">約 NT$8,357</b></p></div></div>
+      </section>
+      <aside class="note"><h2>顧問溫馨提醒</h2><ul><li><b class="green-text">綠色金額</b>表示已配置完成的預估效益或現金流。</li><li><b class="red">紅色金額</b>為每年須留意的保費扣款。</li><li>民國 116 年起，儲蓄險將陸續期滿，屆時繳費壓力可望逐步減輕。</li></ul></aside>
+      <section class="contact"><strong>需要協助檢視保單或扣款安排？</strong><p>請與您的保險顧問聯繫，取得最新保單價值與權益說明。</p><button class="print-button" type="button" onclick="window.print()">列印／儲存為 PDF</button></section>
+    </main>
+    <footer class="footer">本頁為保單資料整理與說明用途；實際保單權益、價值與配息依保險公司正式文件為準。</footer>
+  </div>
+  <script>
+    document.querySelectorAll('.policy-trigger').forEach((button) => {
+      button.addEventListener('click', () => {
+        const card = button.closest('.policy');
+        const open = card.classList.toggle('is-open');
+        button.setAttribute('aria-expanded', String(open));
+      });
     });
-</script>
-
+  </script>
 </body>
 </html>
